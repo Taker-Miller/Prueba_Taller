@@ -1,0 +1,482 @@
+import mysql.connector
+from mysql.connector import Error
+
+def crear_conexion():
+    try:
+        conn = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            passwd='',  # Asegúrate de que la contraseña es correcta o de que no se necesita una
+            database='sistema_tickets'  # Asegúrate de que el nombre de la base de datos es correcto
+        )
+        return conn
+    except Error as e:
+        print(f"Error al conectar a la base de datos MySQL: {e}")
+        return None
+
+def obtener_usuario_por_nombre(nombre):
+    conexion = crear_conexion()
+    cursor = conexion.cursor(dictionary=True)
+    query = "SELECT nombre, correo FROM usuarios WHERE nombre = %s"
+    cursor.execute(query, (nombre,))
+    resultado = cursor.fetchone()
+    cursor.close()
+    conexion.close()
+    return resultado
+
+def obtener_usuarios():
+    conexion = crear_conexion()
+    cursor = conexion.cursor()
+    query = "SELECT nombre FROM usuarios WHERE activo = 1"
+    cursor.execute(query)
+    resultado = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+    return [row[0] for row in resultado]
+
+def desactivar_usuario(nombre_usuario):
+    conexion = crear_conexion()
+    cursor = conexion.cursor()
+    query = "UPDATE usuarios SET activo = 0 WHERE nombre = %s"
+    cursor.execute(query, (nombre_usuario,))
+    conexion.commit()
+    cursor.close()
+    conexion.close()
+    return cursor.rowcount > 0
+
+def validar_usuario(nombre_usuario, contraseña):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "SELECT tipo_usuario, activo FROM usuarios WHERE nombre = %s AND contraseña = %s"
+            cursor.execute(query, (nombre_usuario, contraseña))
+            resultado = cursor.fetchone()
+            if resultado:
+                return True, resultado[0], resultado[1]  # Retorna tipo de usuario y estado de actividad
+            else:
+                return False, None, None
+        finally:
+            cursor.close()
+            conn.close()
+    else:
+        return False, None, None
+
+def crear_usuario(nombre, correo, contraseña, tipo_usuario):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "INSERT INTO usuarios (nombre, correo, contraseña, tipo_usuario) VALUES (%s, %s, %s, %s)"
+            cursor.execute(query, (nombre, correo, contraseña, tipo_usuario))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al crear el usuario: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def desactivar_usuario(nombre_usuario):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "UPDATE usuarios SET activo = 0 WHERE nombre = %s"
+            cursor.execute(query, (nombre_usuario,))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al desactivar el usuario: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def obtener_areas():
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "SELECT nombre FROM areas"
+            cursor.execute(query)
+            areas = cursor.fetchall()
+            return [area[0] for area in areas]
+        except Error as e:
+            print(f"Error al obtener las áreas: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
+    return []
+
+def agregar_area(nombre):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "INSERT INTO areas (nombre) VALUES (%s)"
+            cursor.execute(query, (nombre,))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al agregar el área: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def obtener_tiques():
+    conexion = crear_conexion()
+    cursor = conexion.cursor(dictionary=True)
+    query = "SELECT id FROM tiques"
+    cursor.execute(query)
+    resultado = cursor.fetchall()
+    cursor.close()
+    conexion.close()
+    return resultado
+
+def editar_area(nombre_actual, nuevo_nombre):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "UPDATE areas SET nombre = %s WHERE nombre = %s"
+            cursor.execute(query, (nuevo_nombre, nombre_actual))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al editar el área: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def obtener_tipos_tique():
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "SELECT nombre FROM tipos_tique"
+            cursor.execute(query)
+            tipos_tique = cursor.fetchall()
+            return [tipo[0] for tipo in tipos_tique]
+        except Error as e:
+            print(f"Error al obtener los tipos de tique: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
+    return []
+
+def agregar_tipo_tique(nombre):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "INSERT INTO tipos_tique (nombre) VALUES (%s)"
+            cursor.execute(query, (nombre,))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al agregar el tipo de tique: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def editar_tipo_tique(nombre_actual, nuevo_nombre):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "UPDATE tipos_tique SET nombre = %s WHERE nombre = %s"
+            cursor.execute(query, (nuevo_nombre, nombre_actual))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al editar el tipo de tique: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def obtener_criticidades():
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "SELECT nombre FROM criticidades"
+            cursor.execute(query)
+            criticidades = cursor.fetchall()
+            return [criticidad[0] for criticidad in criticidades]
+        except Error as e:
+            print(f"Error al obtener las criticidades: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
+    return []
+
+def agregar_criticidad(nombre):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "INSERT INTO criticidades (nombre) VALUES (%s)"
+            cursor.execute(query, (nombre,))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al agregar la criticidad: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def editar_criticidad(nombre_actual, nuevo_nombre):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "UPDATE criticidades SET nombre = %s WHERE nombre = %s"
+            cursor.execute(query, (nuevo_nombre, nombre_actual))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al editar la criticidad: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def crear_tique(data):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "INSERT INTO tiques (nombre_cliente, rut, telefono, correo, tipo_tique, criticidad, detalle_servicio, detalle_problema, area, responsable) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(query, (data["Nombre del cliente"], data["Rut"], data["Teléfono"], data["Correo electrónico"], data["Tipo de tique"], data["Criticidad"], data["Detalle del servicio"], data["Detalle del problema"], data["Área para derivar"], data["Responsable"]))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al crear el tique: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def asignar_tique_a_area(tique_id, area):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "UPDATE tiques SET area = %s, estado = 'A resolución' WHERE id = %s"
+            cursor.execute(query, (area, tique_id))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al asignar tique a área: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def asignar_tique_a_ejecutivo(tique_id, ejecutivo):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "UPDATE tiques SET responsable = %s WHERE id = %s"
+            cursor.execute(query, (ejecutivo, tique_id))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al asignar tique a ejecutivo: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def obtener_ejecutivos_area(area):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "SELECT nombre, correo, telefono FROM usuarios WHERE area = %s AND tipo_usuario = 'Ejecutivo'"
+            cursor.execute(query, (area,))
+            ejecutivos = cursor.fetchall()
+            return [{"nombre": e[0], "correo": e[1], "telefono": e[2]} for e in ejecutivos]
+        except Error as e:
+            print(f"Error al obtener ejecutivos del área: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
+    return []
+
+def obtener_tiques_por_area(area):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor(dictionary=True)
+        try:
+            query = "SELECT id, nombre_cliente, fecha_creacion, tipo_tique, criticidad, estado FROM tiques WHERE area = %s"
+            cursor.execute(query, (area,))
+            tiques = cursor.fetchall()
+            print(f"Tiques obtenidos para el área {area}: {tiques}")  # Línea de depuración
+            return tiques
+        except Error as e:
+            print(f"Error al obtener tiques del área: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
+    return []
+
+def obtener_todos_los_tiques():
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor(dictionary=True)
+        try:
+            query = "SELECT id, nombre_cliente, fecha_creacion, tipo_tique, criticidad, area, estado FROM tiques"
+            cursor.execute(query)
+            tiques = cursor.fetchall()
+            print(f"Todos los tiques obtenidos: {tiques}")  # Línea de depuración
+            return tiques
+        except Error as e:
+            print(f"Error al obtener todos los tiques: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
+    return []
+
+def filtrar_tiques(filtros):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor(dictionary=True)
+        try:
+            base_query = "SELECT id, nombre_cliente, fecha_creacion, tipo_tique, criticidad, area, estado FROM tiques WHERE 1=1"
+            conditions = []
+            parameters = []
+
+            if 'fecha' in filtros:
+                conditions.append("DATE(fecha_creacion) = %s")
+                parameters.append(filtros['fecha'])
+
+            if 'criticidad' in filtros:
+                conditions.append("criticidad = %s")
+                parameters.append(filtros['criticidad'])
+
+            if 'tipo_tique' in filtros:
+                conditions.append("tipo_tique = %s")
+                parameters.append(filtros['tipo_tique'])
+
+            if 'estado' in filtros:
+                conditions.append("estado = %s")
+                parameters.append(filtros['estado'])
+
+            if 'area' in filtros:
+                conditions.append("area = %s")
+                parameters.append(filtros['area'])
+
+            query = base_query + " AND ".join(conditions)
+            cursor.execute(query, parameters)
+            tiques = cursor.fetchall()
+            return tiques
+        except Error as e:
+            print(f"Error al filtrar tiques: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
+    return []
+
+def actualizar_estado_tique(id_tique, nuevo_estado):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "UPDATE tiques SET estado = %s WHERE id = %s"
+            cursor.execute(query, (nuevo_estado, id_tique))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al actualizar el estado del tique: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def agregar_observacion_y_cerrar_tique(id_tique, observacion, estado):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "UPDATE tiques SET observacion = %s, estado = %s WHERE id = %s"
+            cursor.execute(query, (observacion, estado, id_tique))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al agregar observación y cerrar el tique: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def asignar_tique_a_varios_ejecutivos(id_tique, lista_ejecutivos):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            for ejecutivo in lista_ejecutivos:
+                query = "INSERT INTO asignaciones (id_tique, ejecutivo) VALUES (%s, %s)"
+                cursor.execute(query, (id_tique, ejecutivo))
+            conn.commit()
+            return True
+        except Error as e:
+            print(f"Error al asignar el tique a varios ejecutivos: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
+
+def enviar_notificacion_email(destinatario, mensaje):
+    # Implementa la lógica para enviar emails
+    print(f"Enviando correo a {destinatario}: {mensaje}")
+
+def enviar_notificacion_sms(numero, mensaje):
+    # Implementa la lógica para enviar mensajes de texto
+    print(f"Enviando SMS a {numero}: {mensaje}")
+
+def correo_existe(correo):
+    conn = crear_conexion()
+    if conn is not None:
+        cursor = conn.cursor()
+        try:
+            query = "SELECT COUNT(*) FROM usuarios WHERE correo = %s"
+            cursor.execute(query, (correo,))
+            result = cursor.fetchone()
+            return result[0] > 0
+        except Error as e:
+            print(f"Error al verificar el correo: {e}")
+            return False
+        finally:
+            cursor.close()
+            conn.close()
+    return False
