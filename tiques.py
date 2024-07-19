@@ -91,7 +91,19 @@ def crear_tique(data):
         cursor = conn.cursor()
         try:
             query = "INSERT INTO tiques (nombre_cliente, rut, telefono, correo, tipo_tique, criticidad, detalle_servicio, detalle_problema, area, responsable) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            cursor.execute(query, (data["Nombre del cliente"], data["Rut"], data["Teléfono"], data["Correo electrónico"], data["Tipo de tique"], data["Criticidad"], data["Detalle del servicio"], data["Detalle del problema"], data["Área para derivar"], data["Responsable"]))
+            
+            nombre_cliente = data.get("Nombre del cliente", "")
+            rut = data.get("Rut", "")
+            telefono = data.get("Teléfono", "")
+            correo = data.get("Correo electrónico", "")
+            tipo_tique = data.get("Tipo de tique", "")
+            criticidad = data.get("Criticidad", "")
+            detalle_servicio = data.get("Detalle del servicio", "")
+            detalle_problema = data.get("Detalle del problema", "")
+            area_para_derivar = data.get("Área Ejecutiva", "")  # Valor predeterminado vacío si no está presente
+            responsable = data.get("Responsable", "")
+
+            cursor.execute(query, (nombre_cliente, rut, telefono, correo, tipo_tique, criticidad, detalle_servicio, detalle_problema, area_para_derivar, responsable))
             conn.commit()
             return True
         except Error as e:
