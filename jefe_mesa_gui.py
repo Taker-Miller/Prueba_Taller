@@ -32,12 +32,16 @@ class InterfazJefeMesa:
         frame_areas = ttk.Frame(self.gestionar_areas_ventana, padding="10")
         frame_areas.grid(row=0, column=0, sticky="EW")
 
-        ttk.Label(frame_areas, text="Nombre del Área:").grid(row=0, column=0, sticky="W")
+        ttk.Label(frame_areas, text="Nombre del Área Actual:").grid(row=0, column=0, sticky="W")
         self.area_entry = ttk.Entry(frame_areas)
         self.area_entry.grid(row=0, column=1, sticky="EW")
 
-        ttk.Button(frame_areas, text="Agregar", command=self.agregar_area).grid(row=1, columnspan=2)
-        ttk.Button(frame_areas, text="Editar", command=self.editar_area).grid(row=2, columnspan=2)
+        ttk.Label(frame_areas, text="Nuevo Nombre del Área:").grid(row=1, column=0, sticky="W")
+        self.nueva_area_entry = ttk.Entry(frame_areas)
+        self.nueva_area_entry.grid(row=1, column=1, sticky="EW")
+
+        ttk.Button(frame_areas, text="Agregar", command=self.agregar_area).grid(row=2, columnspan=2, pady=5)
+        ttk.Button(frame_areas, text="Editar", command=self.editar_area).grid(row=3, columnspan=2, pady=5)
 
     def agregar_area(self):
         nombre_area = self.area_entry.get()
@@ -51,7 +55,7 @@ class InterfazJefeMesa:
 
     def editar_area(self):
         nombre_area = self.area_entry.get()
-        nuevo_nombre_area = self.area_entry.get()  # Necesitas obtener el nuevo nombre de alguna entrada específica
+        nuevo_nombre_area = self.nueva_area_entry.get()
         if not nombre_area or not nuevo_nombre_area:
             messagebox.showerror("Error", "Todos los campos son obligatorios.")
             return
@@ -67,12 +71,16 @@ class InterfazJefeMesa:
         frame_tipos_tique = ttk.Frame(self.gestionar_tipos_tique_ventana, padding="10")
         frame_tipos_tique.grid(row=0, column=0, sticky="EW")
 
-        ttk.Label(frame_tipos_tique, text="Nombre del Tipo de Tique:").grid(row=0, column=0, sticky="W")
+        ttk.Label(frame_tipos_tique, text="Nombre del Tipo de Tique Actual:").grid(row=0, column=0, sticky="W")
         self.tipo_tique_entry = ttk.Entry(frame_tipos_tique)
         self.tipo_tique_entry.grid(row=0, column=1, sticky="EW")
 
-        ttk.Button(frame_tipos_tique, text="Agregar", command=self.agregar_tipo_tique).grid(row=1, columnspan=2)
-        ttk.Button(frame_tipos_tique, text="Editar", command=self.editar_tipo_tique).grid(row=2, columnspan=2)
+        ttk.Label(frame_tipos_tique, text="Nuevo Nombre del Tipo de Tique:").grid(row=1, column=0, sticky="W")
+        self.nuevo_tipo_tique_entry = ttk.Entry(frame_tipos_tique)
+        self.nuevo_tipo_tique_entry.grid(row=1, column=1, sticky="EW")
+
+        ttk.Button(frame_tipos_tique, text="Agregar", command=self.agregar_tipo_tique).grid(row=2, columnspan=2, pady=5)
+        ttk.Button(frame_tipos_tique, text="Editar", command=self.editar_tipo_tique).grid(row=3, columnspan=2, pady=5)
 
     def agregar_tipo_tique(self):
         nombre_tipo_tique = self.tipo_tique_entry.get()
@@ -86,7 +94,7 @@ class InterfazJefeMesa:
 
     def editar_tipo_tique(self):
         nombre_tipo_tique = self.tipo_tique_entry.get()
-        nuevo_nombre_tipo_tique = self.tipo_tique_entry.get()  # Necesitas obtener el nuevo nombre de alguna entrada específica
+        nuevo_nombre_tipo_tique = self.nuevo_tipo_tique_entry.get()
         if not nombre_tipo_tique or not nuevo_nombre_tipo_tique:
             messagebox.showerror("Error", "Todos los campos son obligatorios.")
             return
@@ -102,12 +110,16 @@ class InterfazJefeMesa:
         frame_criticidades = ttk.Frame(self.gestionar_criticidades_ventana, padding="10")
         frame_criticidades.grid(row=0, column=0, sticky="EW")
 
-        ttk.Label(frame_criticidades, text="Nombre de la Criticidad:").grid(row=0, column=0, sticky="W")
+        ttk.Label(frame_criticidades, text="Nombre de la Criticidad Actual:").grid(row=0, column=0, sticky="W")
         self.criticidad_entry = ttk.Entry(frame_criticidades)
         self.criticidad_entry.grid(row=0, column=1, sticky="EW")
 
-        ttk.Button(frame_criticidades, text="Agregar", command=self.agregar_criticidad).grid(row=1, columnspan=2)
-        ttk.Button(frame_criticidades, text="Editar", command=self.editar_criticidad).grid(row=2, columnspan=2)
+        ttk.Label(frame_criticidades, text="Nuevo Nombre de la Criticidad:").grid(row=1, column=0, sticky="W")
+        self.nueva_criticidad_entry = ttk.Entry(frame_criticidades)
+        self.nueva_criticidad_entry.grid(row=1, column=1, sticky="EW")
+
+        ttk.Button(frame_criticidades, text="Agregar", command=self.agregar_criticidad).grid(row=2, columnspan=2, pady=5)
+        ttk.Button(frame_criticidades, text="Editar", command=self.editar_criticidad).grid(row=3, columnspan=2, pady=5)
 
     def agregar_criticidad(self):
         nombre_criticidad = self.criticidad_entry.get()
@@ -121,7 +133,7 @@ class InterfazJefeMesa:
 
     def editar_criticidad(self):
         nombre_criticidad = self.criticidad_entry.get()
-        nuevo_nombre_criticidad = self.criticidad_entry.get()  # Necesitas obtener el nuevo nombre de alguna entrada específica
+        nuevo_nombre_criticidad = self.nueva_criticidad_entry.get()
         if not nombre_criticidad or not nuevo_nombre_criticidad:
             messagebox.showerror("Error", "Todos los campos son obligatorios.")
             return
