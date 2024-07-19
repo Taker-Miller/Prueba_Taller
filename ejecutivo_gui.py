@@ -116,3 +116,36 @@ class InterfazEjecutivo:
                 enviar_notificacion_sms("+56912345678", f"Se le ha asignado el tique con ID {tique_id}.")
         else:
             messagebox.showerror("Error", "No se pudo asignar el tique.")
+
+# Funciones simuladas para las operaciones de backend
+def obtener_tiques_por_area(area_especializada):
+    # Simulación de consulta a la base de datos
+    return [
+        {'id': 1, 'nombre_cliente': 'Cliente A', 'fecha_creacion': '2024-01-01', 'tipo_tique': 'Tipo 1', 'criticidad': 'Alta', 'estado': 'Abierto'},
+        {'id': 2, 'nombre_cliente': 'Cliente B', 'fecha_creacion': '2024-01-02', 'tipo_tique': 'Tipo 2', 'criticidad': 'Media', 'estado': 'Abierto'}
+    ]
+
+def actualizar_estado_tique(tique_id, nuevo_estado):
+    #Simulación de actualización de estado en la base de datos
+    print(f"Actualizando estado del tique {tique_id} a {nuevo_estado}")
+    return True
+
+def agregar_observacion_y_cerrar_tique(tique_id, observacion, estado):
+    #Simulación de agregar observación y cerrar tique en la base de datos
+    print(f"Agregando observación y cerrando tique {tique_id} con estado {estado}")
+    return True
+
+def asignar_tique_a_varios_ejecutivos(tique_id, ejecutivos_ids):
+    #Simulación de asignar tique a varios ejecutivos en la base de datos
+    print(f"Asignando tique {tique_id} a ejecutivos {ejecutivos_ids}")
+    return True
+
+def enviar_notificacion_email(email, asunto, mensaje):
+    #Simulación de envío de notificación por correo
+    print(f"Enviando correo a {email}: {asunto} - {mensaje}")
+
+def enviar_notificacion_sms(numero, mensaje):
+    #Simulación de envío de notificación por mensaje de texto
+    print(f"Enviando SMS a {numero}: {mensaje}")
+
+
